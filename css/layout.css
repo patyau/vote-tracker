@@ -119,9 +119,9 @@ figure {
   width: 250px;
 }
 
-figure:hover, img:hover {
-  background-color: gray;
-  opacity: .8;
+img:hover {
+  background-color: #B4EEB4;
+  opacity: .75;
   cursor: pointer;
 }
 

@@ -2,9 +2,8 @@
 var imgArray = [];
 
 /* Picture Constructor */
-function picture(shortName, number, path) {
-	this.shortName = shortName;
-	this.number = number;
+function Picture(player, path) {
+	this.player = player;
 	this.path = path;
 	this.votes = 0;
 
@@ -13,9 +12,27 @@ function picture(shortName, number, path) {
 };
 
 /* Create Picture Objects */
-var test01 = new picture('test01', 1, 'img/test-01.jpg');
-var test02 = new picture('test02', 2, 'img/test-02.jpg');
-var test03 = new picture('test03', 3, 'img/test-03.jpg');
+var kobe = new Picture('Kobe Bryant', 'img/kobe-bryant.jpg');
+var lebron = new Picture('LeBron James', 'img/lebron-james.jpg');
+var dwyane = new Picture('Dwyane Wade', 'img/dwyane-wade.jpg');
+var michael = new Picture('Michael Jordan', 'img/michael-jordan.jpg');
+var kevin = new Picture('Kevin Durant', 'img/kevin-durant.jpg');
+var vince = new Picture('Vince Carter', 'img/vince-carter.jpg');
+var tracy = new Picture('Tracy McGrady', 'img/tracy-mcgrady.jpg');
+var steph = new Picture('Steph Curry', 'img/steph-curry.jpg');
+var james = new Picture('James Harden', 'img/james-harden.jpg');
+var chris = new Picture('Chris Paul', 'img/chris-paul.jpg');
+var larry = new Picture('Larry Bird', 'img/larry-bird.jpg');
+var magic = new Picture('Magic Johnson', 'img/magic-johnson.jpg');
+var tim = new Picture('Tim Duncan', 'img/tim-duncan.jpg');
+var shaq = new Picture('Shaquille O\'Neal', 'img/shaquille-oneal.jpg');
+var charles = new Picture('Charles Barkley', 'img/charles-barkley.jpg');
+var russell = new Picture('Russell Westbrook', 'img/russell-westbrook.jpg');
+var brandon = new Picture('Brandon Roy', 'img/brandon-roy.jpg');
+var allen = new Picture('Allen Iverson', 'img/allen-iverson.jpg');
+var carmelo = new Picture('Carmelo Anthony', 'img/carmelo-anthony.jpg');
+var blake = new Picture('Blake Griffin', 'img/blake-griffin.jpg');
+var anthony = new Picture('Anthony Davis', 'img/anthony-davis.jpg');
 
 var choice1 = document.getElementById('choice1');
 var choice2 = document.getElementById('choice2');
