@@ -1,0 +1,17 @@
+/** {
+  border: 1px dotted green;
+}*/
+
+figure {
+  width: 250px;
+}
+
+img:hover {
+  background-color: #B4EEB4;
+  opacity: .75;
+  cursor: pointer;
+}
+
+img {
+	border: solid black 5px;
+}

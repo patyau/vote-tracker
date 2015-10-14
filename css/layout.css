@@ -25,9 +25,7 @@
 - Media Queries
 */
 
-* {
-  border: 1px dotted green;
-}
+
 
 /* Grid
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -115,15 +113,7 @@
 
 }
 
-figure {
-  width: 250px;
-}
 
-img:hover {
-  background-color: #B4EEB4;
-  opacity: .75;
-  cursor: pointer;
-}
 
 /* Base Styles
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
