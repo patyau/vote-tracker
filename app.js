@@ -72,19 +72,55 @@ window.onload = function(e) {
 };
 
 choice1.addEventListener('click', function() {
-	starTrekArray[rand1].votes += 1
-	starTrekTotalVotes += 1
+	starTrekArray[rand1].votes += 1;
+	starTrekTotalVotes += 1;
 	console.log('User voted for: ' + starTrekArray[rand1].character);
 	console.log(starTrekArray[rand1].character + ' total votes = ' + starTrekArray[rand1].votes)
 	console.log('starTrekTotalVotes: ' + starTrekTotalVotes)
 	tracker.displayImages(event);
+	makechart();
 });
 
 choice2.addEventListener('click', function() {
-	starWarsArray[rand2].votes += 1
-	starWarsTotalVotes += 1
+	starWarsArray[rand2].votes += 1;
+	starWarsTotalVotes += 1;
 	console.log('User voted for: ' + starWarsArray[rand2].character);
 	console.log(starWarsArray[rand2].character + ' total votes = ' + starWarsArray[rand2].votes)
 	console.log('starWarsTotalVotes: ' + starWarsTotalVotes)
 	tracker.displayImages(event);
+	makechart();
 });
+
+function makechart()	{
+	var data = [
+	  {
+	    value: starTrekTotalVotes,
+	    label: 'Star Trek',
+	    color: '#811BD6',
+	    highlight: '#811B33',
+	    labelcolor: 'white',
+	    labelfontsize: '16'
+	  },
+	  {
+	    value: starWarsTotalVotes,
+	    label: 'Star Wars',
+	    color: '#9CBABA',
+	    highlight: '#9CBA99',
+	    labelcolor: 'white',
+	    labelfontsize: '16'
+	  }
+	];
+
+	var context = document.getElementById('results').getContext('2d');
+	var skillsChart = new Chart(context).Doughnut(data, {
+	    //Number - Amount of animation steps
+	    animationSteps : 30,
+	    //String - Animation easing effect
+	    animationEasing : "easeOutBounce",
+	    //Boolean - Whether we animate the rotation of the Doughnut
+	    animateRotate : true,
+	    //Boolean - Whether we animate scaling the Doughnut from the centre
+	    animateScale : true
+	});
+}
+makechart();
