@@ -4,34 +4,27 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Would you rather...</title>
-	<link rel="stylesheet" href="style.css"
+	<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+	<link rel="stylesheet" type="text/css" href="css/layout.css" />
 </head>
 <body>
-	<header>
+	<header class="container">
 		<h1>Would you rather...</h1>
 	</header>
 	<main class="container"> <!--Main = flex box -->
 			<nav>
 			</nav>
-		<section id="content"  class="item">
-			
-			<form>
-			<h3>Image 1</h3>
-			<img id="pic1" />
-			<input id="radio" name="choose" type="radio">Pic1<br />
+		<section id="content"  class="twelve columns">
+		
+	
+			<figure id="choice1" type="click">
+			</figure>
 			<h3>OR</h3>
-
-			<h3>Image 2</h3>
-			<img id="pic2" />
-			<input id="radio" name="choose" type="radio">Pic2<br />
-			
-			<p>			
-			<button id="voteSubmit" type="click">VOTE</button>
-			</p>
-			</form>
+			<figure id="choice2" type="click"></figure>
+	
 
 		</section>
-		<aside id="Links" class="item">
+		<aside id="Links" class="four columns">
 			<h1>Fun Links</h1>
 			<ul>
 				<li><a href="" title="">Link 1</a></li>
@@ -43,7 +36,7 @@
 			</ul>
 		</aside>
 	</main>
-	<footer class="item">
+	<footer class="container">
 		<h1>This is my footer</h1>
 	</footer>
 <script src="app.js"></script>
