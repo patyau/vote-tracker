@@ -2,14 +2,19 @@
   border: 1px dotted green;
 }*/
 
+/*body {
+	background-image: url(../space.jpg);
+	color: white;
+}*/
+
+/*.container {
+	background: rgba(7, 7, 7, .7);
+}
+*/
 section {
 /*	border: 3px solid red;
 */	padding: 0;
-	margin-left: 0;
-}
-
-figure {
-  width: 250px;
+	margin-left: 0px;
 }
 
 img:hover {
@@ -25,5 +30,32 @@ img {
 
 figure {
 	margin-left: 0;
+	margin-bottom: 10px;
+}
+/*
+#choice2 {
+	margin-left: 30px;
+}
+*/
+#content2 {
+	margin-top: 150px;
+/*	text-align: center;
+*/	padding-left: 25px;
+}
+
+/*#chart {
+	padding-left: 30px;
+}*/
+
+#chart {
+	margin-left: 30px;
+}
+
+section h2 {
+	margin-left: 25px;
+}
+
+header h2 {
+	margin-top: 30px;
 	margin-bottom: 10px;
 }

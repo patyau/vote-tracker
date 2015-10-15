@@ -9,13 +9,13 @@ function starTrek(character, path) {
 	this.path = path;
 	this.votes = 0;
 	starTrekArray.push(this);
-};
+}
 
 var kirk = new starTrek('Captain Kirk', 'img/star-trek/kirk.jpg');
 var picard = new starTrek('Captain Picard', 'img/star-trek/picard.jpg');
 var spock = new starTrek('Spock', 'img/star-trek/spock.jpg');
-var bashir = new starTrek('Dr. Julian Bashir', 'img/star-trek/bashir.jpg');
-var borg = new starTrek('Borg Hive Member', 'img/star-trek/borg.jpg');
+var bashir = new starTrek('Dr. Bashir', 'img/star-trek/bashir.jpg');
+var borg = new starTrek('The Borg', 'img/star-trek/borg.jpg');
 var chakotay = new starTrek('Chakotay', 'img/star-trek/chakotay.jpg');
 var crusher = new starTrek('Beverly Crusher', 'img/star-trek/crusher.jpg');
 var data = new starTrek('Data', 'img/star-trek/data.jpg');
@@ -48,7 +48,7 @@ function starWars(character, path) {
 	this.path = path;
 	this.votes = 0;
 	starWarsArray.push(this);
-};
+}
 
 var luke = new starWars('Luke Skywalker', 'img/star-wars/luke-skywalker.jpg');
 var yoda = new starWars('Yoda', 'img/star-wars/yoda.jpg');
@@ -101,30 +101,65 @@ return Math.floor(Math.random() * starWarsArray.length);
 }
 
 tracker.displayImages = function(e) {
-	e.preventDefault();
+	if (starTrekArray.length === 0) {
+		console.log('no more star trek characters')
+		return null;
+	}
+	else {
+		e.preventDefault();
 
-	/* Call randPic functions to grab two random photo numbers */
-	rand1 = tracker.starTrekRandPic();
-	rand2 = tracker.starWarsRandPic();
-
-	/* Do while loop that if rand2 = rand1... then redo rand2 */
-	do {
+		/* Call randPic functions to grab two random photo numbers */
+		rand1 = tracker.starTrekRandPic();
 		rand2 = tracker.starWarsRandPic();
-	} while (rand1 === rand2);
 
-	/*	grab two img placeholder elements by html attrib id's
-		assign src (from array position) to the img tags using img.src */
-	choice1.innerHTML = '<img src ="' + starTrekArray[rand1].path + '">';
-	choice2.innerHTML = '<img src ="' + starWarsArray[rand2].path + '">';
+		/*	grab two img placeholder elements by html attrib id's
+			assign src (from array position) to the img tags using img.src */
+		choice1.innerHTML = '<img alt ="' + starTrekArray[rand1].character + '" title="' + starTrekArray[rand1].character + '" src ="' + starTrekArray[rand1].path + '">';
+		choice2.innerHTML = '<img alt ="' + starWarsArray[rand2].character + '" title="' + starWarsArray[rand2].character + '" src ="' + starWarsArray[rand2].path + '">';
 
-	trekName.innerHTML = starTrekArray[rand1].character;
-	warsName.innerHTML = starWarsArray[rand2].character;
+		trekName.innerHTML = starTrekArray[rand1].character;
+		warsName.innerHTML = starWarsArray[rand2].character;		
+
+		// var discardedStarTrek = starTrekArray.splice(rand1,1);
+		// var discardedStarWars = starWarsArray.splice(rand2,1);
+
+		// for(var i = 0; i < discardedStarTrek.length; i++) {
+		// 	console.log(discardedStarTrek[i].character);
+		// }
+
+		// for(var i = 0; i < discardedStarWars.length; i++) {
+		// 	console.log(discardedStarWars[i].character);
+		// }
+	}
 };
 
 /* code to load pics on initial page load */
 window.onload = function(e) {
 	tracker.displayImages(e);
 };
+
+/* function to store local data */
+function storeData() {
+	// var starTrekData = JSON.stringify(starTrekTotalVotes);
+	// var starWarsData = JSON.stringify(starWarsTotalVotes);
+	// localStorage.setItem('Star Trek votes', starTrekData);
+	// localStorage.setItem('Star Wars votes', starWarsData);
+
+	localStorage.setItem('Star Trek votes', JSON.stringify(starTrekTotalVotes));
+	localStorage.setItem('Star Wars votes', JSON.stringify(starWarsTotalVotes));
+}
+
+function retrieveData() {
+	var retrievedStarTrekVotesTemp = localStorage.getItem('Star Trek votes');
+	var retrievedStarWarsVotesTemp = localStorage.getItem('Star Wars votes');
+	var retrievedStarTrekVotes = JSON.parse(retrievedStarTrekVotesTemp);
+	var retrievedStarWarsVotes = JSON.parse(retrievedStarWarsVotesTemp);
+
+	starTrekTotalVotes = retrievedStarTrekVotes;
+	starWarsTotalVotes = retrievedStarWarsVotes;
+}
+
+retrieveData();
 
 choice1.addEventListener('click', function() {
 	starTrekArray[rand1].votes += 1;
@@ -134,6 +169,7 @@ choice1.addEventListener('click', function() {
 	console.log('starTrekTotalVotes: ' + starTrekTotalVotes)
 	tracker.displayImages(event);
 	makechart();
+	storeData();
 });
 
 choice2.addEventListener('click', function() {
@@ -144,6 +180,7 @@ choice2.addEventListener('click', function() {
 	console.log('starWarsTotalVotes: ' + starWarsTotalVotes)
 	tracker.displayImages(event);
 	makechart();
+	storeData();
 });
 
 function makechart()	{
