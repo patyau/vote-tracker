@@ -8,7 +8,7 @@ star trek
 	crusher
 	uhura
 	scotty
-	sisco
+	sisko
 	janeway
 	seven of 9
 	odo
@@ -16,15 +16,17 @@ star trek
 	dr bashir
 	mccoy
 	dax
-	chief obrien
-	wesley crusher
+	obrien
+	wesley 
 	quark
 	guinan
-	harry kim
+	harry
 	tuvok
 	borg
-	tom paris
 	sulu
+	geordi
+	tasha 
+	riker
 
 star wars
 	yoda
@@ -32,10 +34,10 @@ star wars
 	luke skywalker
 	young obiwan
 	old obiwan
-	anakin skywalker
+	anakin
 	padme
-	princess leia
-	uncle owen
+	leia
+=	owen
 	chewie
 	ewoks
 	boba fett

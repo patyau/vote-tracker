@@ -1,13 +1,11 @@
 /*!
  * Chart.js
  * http://chartjs.org/
- * Version: 1.0.2
  *
- * Copyright 2015 Nick Downie
+ * Copyright 2014 Nick Downie
  * Released under the MIT license
  * https://github.com/nnnick/Chart.js/blob/master/LICENSE.md
  */
-
 
 
 (function(){
@@ -26,25 +24,6 @@
 		this.ctx = context;
 
 		//Variables global to the chart
-		var computeDimension = function(element,dimension)
-		{
-			if (element['offset'+dimension])
-			{
-				return element['offset'+dimension];
-			}
-			else
-			{
-				return document.defaultView.getComputedStyle(element).getPropertyValue(dimension);
-			}
-		}
-
-		var width = this.width = computeDimension(context.canvas,'Width');
-		var height = this.height = computeDimension(context.canvas,'Height');
-
-		// Firefox requires this to work correctly
-		context.canvas.width  = width;
-		context.canvas.height = height;
-
 		var width = this.width = context.canvas.width;
 		var height = this.height = context.canvas.height;
 		this.aspectRatio = this.width / this.height;
@@ -112,14 +91,8 @@
 			// Boolean - whether or not the chart should be responsive and resize when the browser does.
 			responsive: false,
 
-			// Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
-			maintainAspectRatio: true,
-
 			// Boolean - Determines whether to draw tooltips on the canvas or not - attaches events to touchmove & mousemove
 			showTooltips: true,
-
-			// Boolean - Determines whether to draw built-in tooltip or call custom tooltip function
-			customTooltips: false,
 
 			// Array - Array of string names to attach tooltip events
 			tooltipEvents: ["mousemove", "touchstart", "touchmove", "mouseout"],
@@ -240,41 +213,6 @@
 				return -1;
 			}
 		},
-		where = helpers.where = function(collection, filterCallback){
-			var filtered = [];
-
-			helpers.each(collection, function(item){
-				if (filterCallback(item)){
-					filtered.push(item);
-				}
-			});
-
-			return filtered;
-		},
-		findNextWhere = helpers.findNextWhere = function(arrayToSearch, filterCallback, startIndex){
-			// Default to start of the array
-			if (!startIndex){
-				startIndex = -1;
-			}
-			for (var i = startIndex + 1; i < arrayToSearch.length; i++) {
-				var currentItem = arrayToSearch[i];
-				if (filterCallback(currentItem)){
-					return currentItem;
-				}
-			}
-		},
-		findPreviousWhere = helpers.findPreviousWhere = function(arrayToSearch, filterCallback, startIndex){
-			// Default to end of the array
-			if (!startIndex){
-				startIndex = arrayToSearch.length;
-			}
-			for (var i = startIndex - 1; i >= 0; i--) {
-				var currentItem = arrayToSearch[i];
-				if (filterCallback(currentItem)){
-					return currentItem;
-				}
-			}
-		},
 		inherits = helpers.inherits = function(extensions){
 			//Basic javascript inheritance based on the model created in Backbone.js
 			var parent = this;
@@ -303,7 +241,7 @@
 			//Method for warning of errors
 			if (window.console && typeof window.console.warn == "function") console.warn(str);
 		},
-		amd = helpers.amd = (typeof define == 'function' && define.amd),
+		amd = helpers.amd = (typeof root.define == 'function' && root.define.amd),
 		//-- Math methods
 		isNumber = helpers.isNumber = function(n){
 			return !isNaN(parseFloat(n)) && isFinite(n);
@@ -464,13 +402,6 @@
 		//Templating methods
 		//Javascript micro templating by John Resig - source at http://ejohn.org/blog/javascript-micro-templating/
 		template = helpers.template = function(templateString, valuesObject){
-
-			// If templateString is function rather than string-template - call the function for valuesObject
-
-			if(templateString instanceof Function){
-			 	return templateString(valuesObject);
-		 	}
-
 			var cache = {};
 			function tmpl(str, data){
 				// Figure out if we're getting a template, or if we need to
@@ -762,22 +693,16 @@
 				removeEvent(chartInstance.chart.canvas, eventName, handler);
 			});
 		},
-		getMaximumWidth = helpers.getMaximumWidth = function(domNode){
+		getMaximumSize = helpers.getMaximumSize = function(domNode){
 			var container = domNode.parentNode;
 			// TODO = check cross browser stuff with this.
 			return container.clientWidth;
 		},
-		getMaximumHeight = helpers.getMaximumHeight = function(domNode){
-			var container = domNode.parentNode;
-			// TODO = check cross browser stuff with this.
-			return container.clientHeight;
-		},
-		getMaximumSize = helpers.getMaximumSize = helpers.getMaximumWidth, // legacy support
 		retinaScale = helpers.retinaScale = function(chart){
 			var ctx = chart.ctx,
 				width = chart.canvas.width,
 				height = chart.canvas.height;
-
+			//console.log(width + " x " + height);
 			if (window.devicePixelRatio) {
 				ctx.canvas.style.width = width + "px";
 				ctx.canvas.style.height = height + "px";
@@ -845,17 +770,17 @@
 		},
 		stop : function(){
 			// Stops any current animation loop occuring
-			cancelAnimFrame(this.animationFrame);
+			helpers.cancelAnimFrame.call(root, this.animationFrame);
 			return this;
 		},
 		resize : function(callback){
 			this.stop();
 			var canvas = this.chart.canvas,
-				newWidth = getMaximumWidth(this.chart.canvas),
-				newHeight = this.options.maintainAspectRatio ? newWidth / this.chart.aspectRatio : getMaximumHeight(this.chart.canvas);
+				newWidth = getMaximumSize(this.chart.canvas),
+				newHeight = newWidth / this.chart.aspectRatio;
 
 			canvas.width = this.chart.width = newWidth;
-			canvas.height = this.chart.height = newHeight;
+			canvas.height =  this.chart.height = newHeight;
 
 			retinaScale(this.chart);
 
@@ -891,21 +816,6 @@
 		destroy : function(){
 			this.clear();
 			unbindEvents(this, this.events);
-			var canvas = this.chart.canvas;
-
-			// Reset canvas height/width attributes starts a fresh with the canvas context
-			canvas.width = this.chart.width;
-			canvas.height = this.chart.height;
-
-			// < IE9 doesn't support removeProperty
-			if (canvas.style.removeProperty) {
-				canvas.style.removeProperty('width');
-				canvas.style.removeProperty('height');
-			} else {
-				canvas.style.removeAttribute('width');
-				canvas.style.removeAttribute('height');
-			}
-
 			delete Chart.instances[this.id];
 		},
 		showTooltip : function(ChartElements, forceRedraw){
@@ -935,9 +845,6 @@
 				this.activeElements = ChartElements;
 			}
 			this.draw();
-			if(this.options.customTooltips){
-				this.options.customTooltips(false);
-			}
 			if (ChartElements.length > 0){
 				// If we have multiple datasets, show a MultiTooltip for all of the data points at that index
 				if (this.datasets && this.datasets.length > 1) {
@@ -966,9 +873,7 @@
 								yMin;
 							helpers.each(this.datasets, function(dataset){
 								dataCollection = dataset.points || dataset.bars || dataset.segments;
-								if (dataCollection[dataIndex] && dataCollection[dataIndex].hasValue()){
-									Elements.push(dataCollection[dataIndex]);
-								}
+								Elements.push(dataCollection[dataIndex]);
 							});
 
 							helpers.each(Elements, function(element) {
@@ -1018,8 +923,7 @@
 						legendColorBackground : this.options.multiTooltipKeyBackground,
 						title: ChartElements[0].label,
 						chart: this.chart,
-						ctx: this.chart.ctx,
-						custom: this.options.customTooltips
+						ctx: this.chart.ctx
 					}).draw();
 
 				} else {
@@ -1038,8 +942,7 @@
 							caretHeight: this.options.tooltipCaretSize,
 							cornerRadius: this.options.tooltipCornerRadius,
 							text: template(this.options.tooltipTemplate, Element),
-							chart: this.chart,
-							custom: this.options.customTooltips
+							chart: this.chart
 						}).draw();
 					}, this);
 				}
@@ -1132,9 +1035,6 @@
 				x : this.x,
 				y : this.y
 			};
-		},
-		hasValue: function(){
-			return isNumber(this.value);
 		}
 	});
 
@@ -1142,27 +1042,25 @@
 
 
 	Chart.Point = Chart.Element.extend({
-		display: true,
-		inRange: function(chartX,chartY){
+		inRange : function(chartX,chartY){
 			var hitDetectionRange = this.hitDetectionRadius + this.radius;
 			return ((Math.pow(chartX-this.x, 2)+Math.pow(chartY-this.y, 2)) < Math.pow(hitDetectionRange,2));
 		},
 		draw : function(){
-			if (this.display){
-				var ctx = this.ctx;
-				ctx.beginPath();
+			var ctx = this.ctx;
+			ctx.beginPath();
 
-				ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
-				ctx.closePath();
+			ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
+			ctx.closePath();
 
-				ctx.strokeStyle = this.strokeColor;
-				ctx.lineWidth = this.strokeWidth;
+			ctx.strokeStyle = this.strokeColor;
+			ctx.lineWidth = this.strokeWidth;
 
-				ctx.fillStyle = this.fillColor;
+			ctx.fillStyle = this.fillColor;
 
-				ctx.fill();
-				ctx.stroke();
-			}
+			ctx.fill();
+			ctx.stroke();
+
 
 
 			//Quick debug for bezier curve splining
@@ -1181,7 +1079,6 @@
 			// ctx.fill();
 
 			// ctx.moveTo(this.controlPoints.inner.x,this.controlPoints.inner.y);
-			// ctx.lineTo(this.x, this.y);
 			// ctx.lineTo(this.controlPoints.outer.x,this.controlPoints.outer.y);
 			// ctx.stroke();
 
@@ -1295,7 +1192,7 @@
 			this.yAlign = "above";
 
 			//Distance between the actual element.y position and the start of the tooltip caret
-			var caretPadding = this.caretPadding = 2;
+			var caretPadding = 2;
 
 			var tooltipWidth = ctx.measureText(this.text).width + 2*this.xPadding,
 				tooltipRectHeight = this.fontSize + 2*this.yPadding,
@@ -1317,53 +1214,47 @@
 
 			ctx.fillStyle = this.fillColor;
 
-			// Custom Tooltips
-			if(this.custom){
-				this.custom(this);
-			}
-			else{
-				switch(this.yAlign)
-				{
-				case "above":
-					//Draw a caret above the x/y
-					ctx.beginPath();
-					ctx.moveTo(this.x,this.y - caretPadding);
-					ctx.lineTo(this.x + this.caretHeight, this.y - (caretPadding + this.caretHeight));
-					ctx.lineTo(this.x - this.caretHeight, this.y - (caretPadding + this.caretHeight));
-					ctx.closePath();
-					ctx.fill();
-					break;
-				case "below":
-					tooltipY = this.y + caretPadding + this.caretHeight;
-					//Draw a caret below the x/y
-					ctx.beginPath();
-					ctx.moveTo(this.x, this.y + caretPadding);
-					ctx.lineTo(this.x + this.caretHeight, this.y + caretPadding + this.caretHeight);
-					ctx.lineTo(this.x - this.caretHeight, this.y + caretPadding + this.caretHeight);
-					ctx.closePath();
-					ctx.fill();
-					break;
-				}
-
-				switch(this.xAlign)
-				{
-				case "left":
-					tooltipX = this.x - tooltipWidth + (this.cornerRadius + this.caretHeight);
-					break;
-				case "right":
-					tooltipX = this.x - (this.cornerRadius + this.caretHeight);
-					break;
-				}
-
-				drawRoundedRectangle(ctx,tooltipX,tooltipY,tooltipWidth,tooltipRectHeight,this.cornerRadius);
-
+			switch(this.yAlign)
+			{
+			case "above":
+				//Draw a caret above the x/y
+				ctx.beginPath();
+				ctx.moveTo(this.x,this.y - caretPadding);
+				ctx.lineTo(this.x + this.caretHeight, this.y - (caretPadding + this.caretHeight));
+				ctx.lineTo(this.x - this.caretHeight, this.y - (caretPadding + this.caretHeight));
+				ctx.closePath();
 				ctx.fill();
-
-				ctx.fillStyle = this.textColor;
-				ctx.textAlign = "center";
-				ctx.textBaseline = "middle";
-				ctx.fillText(this.text, tooltipX + tooltipWidth/2, tooltipY + tooltipRectHeight/2);
+				break;
+			case "below":
+				tooltipY = this.y + caretPadding + this.caretHeight;
+				//Draw a caret below the x/y
+				ctx.beginPath();
+				ctx.moveTo(this.x, this.y + caretPadding);
+				ctx.lineTo(this.x + this.caretHeight, this.y + caretPadding + this.caretHeight);
+				ctx.lineTo(this.x - this.caretHeight, this.y + caretPadding + this.caretHeight);
+				ctx.closePath();
+				ctx.fill();
+				break;
 			}
+
+			switch(this.xAlign)
+			{
+			case "left":
+				tooltipX = this.x - tooltipWidth + (this.cornerRadius + this.caretHeight);
+				break;
+			case "right":
+				tooltipX = this.x - (this.cornerRadius + this.caretHeight);
+				break;
+			}
+
+			drawRoundedRectangle(ctx,tooltipX,tooltipY,tooltipWidth,tooltipRectHeight,this.cornerRadius);
+
+			ctx.fill();
+
+			ctx.fillStyle = this.textColor;
+			ctx.textAlign = "center";
+			ctx.textBaseline = "middle";
+			ctx.fillText(this.text, tooltipX + tooltipWidth/2, tooltipY + tooltipRectHeight/2);
 		}
 	});
 
@@ -1388,6 +1279,7 @@
 			var halfHeight = this.height/2;
 
 			//Check to ensure the height will fit on the canvas
+			//The three is to buffer form the very
 			if (this.y - halfHeight < 0 ){
 				this.y = halfHeight;
 			} else if (this.y + halfHeight > this.chart.height){
@@ -1416,42 +1308,36 @@
 
 		},
 		draw : function(){
-			// Custom Tooltips
-			if(this.custom){
-				this.custom(this);
-			}
-			else{
-				drawRoundedRectangle(this.ctx,this.x,this.y - this.height/2,this.width,this.height,this.cornerRadius);
-				var ctx = this.ctx;
-				ctx.fillStyle = this.fillColor;
-				ctx.fill();
-				ctx.closePath();
+			drawRoundedRectangle(this.ctx,this.x,this.y - this.height/2,this.width,this.height,this.cornerRadius);
+			var ctx = this.ctx;
+			ctx.fillStyle = this.fillColor;
+			ctx.fill();
+			ctx.closePath();
 
-				ctx.textAlign = "left";
-				ctx.textBaseline = "middle";
-				ctx.fillStyle = this.titleTextColor;
-				ctx.font = this.titleFont;
+			ctx.textAlign = "left";
+			ctx.textBaseline = "middle";
+			ctx.fillStyle = this.titleTextColor;
+			ctx.font = this.titleFont;
 
-				ctx.fillText(this.title,this.x + this.xPadding, this.getLineHeight(0));
+			ctx.fillText(this.title,this.x + this.xPadding, this.getLineHeight(0));
 
-				ctx.font = this.font;
-				helpers.each(this.labels,function(label,index){
-					ctx.fillStyle = this.textColor;
-					ctx.fillText(label,this.x + this.xPadding + this.fontSize + 3, this.getLineHeight(index + 1));
+			ctx.font = this.font;
+			helpers.each(this.labels,function(label,index){
+				ctx.fillStyle = this.textColor;
+				ctx.fillText(label,this.x + this.xPadding + this.fontSize + 3, this.getLineHeight(index + 1));
 
-					//A bit gnarly, but clearing this rectangle breaks when using explorercanvas (clears whole canvas)
-					//ctx.clearRect(this.x + this.xPadding, this.getLineHeight(index + 1) - this.fontSize/2, this.fontSize, this.fontSize);
-					//Instead we'll make a white filled block to put the legendColour palette over.
+				//A bit gnarly, but clearing this rectangle breaks when using explorercanvas (clears whole canvas)
+				//ctx.clearRect(this.x + this.xPadding, this.getLineHeight(index + 1) - this.fontSize/2, this.fontSize, this.fontSize);
+				//Instead we'll make a white filled block to put the legendColour palette over.
 
-					ctx.fillStyle = this.legendColorBackground;
-					ctx.fillRect(this.x + this.xPadding, this.getLineHeight(index + 1) - this.fontSize/2, this.fontSize, this.fontSize);
+				ctx.fillStyle = this.legendColorBackground;
+				ctx.fillRect(this.x + this.xPadding, this.getLineHeight(index + 1) - this.fontSize/2, this.fontSize, this.fontSize);
 
-					ctx.fillStyle = this.legendColors[index].fill;
-					ctx.fillRect(this.x + this.xPadding, this.getLineHeight(index + 1) - this.fontSize/2, this.fontSize, this.fontSize);
+				ctx.fillStyle = this.legendColors[index].fill;
+				ctx.fillRect(this.x + this.xPadding, this.getLineHeight(index + 1) - this.fontSize/2, this.fontSize, this.fontSize);
 
 
-				},this);
-			}
+			},this);
 		}
 	});
 
@@ -1594,7 +1480,7 @@
 			var isRotated = (this.xLabelRotation > 0),
 				// innerWidth = (this.offsetGridLines) ? this.width - offsetLeft - this.padding : this.width - (offsetLeft + halfLabelWidth * 2) - this.padding,
 				innerWidth = this.width - (this.xScalePaddingLeft + this.xScalePaddingRight),
-				valueWidth = innerWidth/Math.max((this.valuesCount - ((this.offsetGridLines) ? 0 : 1)), 1),
+				valueWidth = innerWidth/(this.valuesCount - ((this.offsetGridLines) ? 0 : 1)),
 				valueOffset = (valueWidth * index) + this.xScalePaddingLeft;
 
 			if (this.offsetGridLines){
@@ -1616,24 +1502,14 @@
 				ctx.font = this.font;
 				each(this.yLabels,function(labelString,index){
 					var yLabelCenter = this.endPoint - (yLabelGap * index),
-						linePositionY = Math.round(yLabelCenter),
-						drawHorizontalLine = this.showHorizontalLines;
+						linePositionY = Math.round(yLabelCenter);
 
 					ctx.textAlign = "right";
 					ctx.textBaseline = "middle";
 					if (this.showLabels){
 						ctx.fillText(labelString,xStart - 10,yLabelCenter);
 					}
-
-					// This is X axis, so draw it
-					if (index === 0 && !drawHorizontalLine){
-						drawHorizontalLine = true;
-					}
-
-					if (drawHorizontalLine){
-						ctx.beginPath();
-					}
-
+					ctx.beginPath();
 					if (index > 0){
 						// This is a grid line in the centre, so drop that
 						ctx.lineWidth = this.gridLineWidth;
@@ -1646,12 +1522,10 @@
 
 					linePositionY += helpers.aliasPixel(ctx.lineWidth);
 
-					if(drawHorizontalLine){
-						ctx.moveTo(xStart, linePositionY);
-						ctx.lineTo(this.width, linePositionY);
-						ctx.stroke();
-						ctx.closePath();
-					}
+					ctx.moveTo(xStart, linePositionY);
+					ctx.lineTo(this.width, linePositionY);
+					ctx.stroke();
+					ctx.closePath();
 
 					ctx.lineWidth = this.lineWidth;
 					ctx.strokeStyle = this.lineColor;
@@ -1667,17 +1541,9 @@
 					var xPos = this.calculateX(index) + aliasPixel(this.lineWidth),
 						// Check to see if line/bar here and decide where to place the line
 						linePos = this.calculateX(index - (this.offsetGridLines ? 0.5 : 0)) + aliasPixel(this.lineWidth),
-						isRotated = (this.xLabelRotation > 0),
-						drawVerticalLine = this.showVerticalLines;
+						isRotated = (this.xLabelRotation > 0);
 
-					// This is Y axis, so draw it
-					if (index === 0 && !drawVerticalLine){
-						drawVerticalLine = true;
-					}
-
-					if (drawVerticalLine){
-						ctx.beginPath();
-					}
+					ctx.beginPath();
 
 					if (index > 0){
 						// This is a grid line in the centre, so drop that
@@ -1688,13 +1554,10 @@
 						ctx.lineWidth = this.lineWidth;
 						ctx.strokeStyle = this.lineColor;
 					}
-
-					if (drawVerticalLine){
-						ctx.moveTo(linePos,this.endPoint);
-						ctx.lineTo(linePos,this.startPoint - 3);
-						ctx.stroke();
-						ctx.closePath();
-					}
+					ctx.moveTo(linePos,this.endPoint);
+					ctx.lineTo(linePos,this.startPoint - 3);
+					ctx.stroke();
+					ctx.closePath();
 
 
 					ctx.lineWidth = this.lineWidth;
@@ -2008,8 +1871,6 @@
 		define(function(){
 			return Chart;
 		});
-	} else if (typeof module === 'object' && module.exports) {
-		module.exports = Chart;
 	}
 
 	root.Chart = Chart;
@@ -2020,7 +1881,6 @@
 	};
 
 }).call(this);
-
 (function(){
 	"use strict";
 
@@ -2041,12 +1901,6 @@
 
 		//Number - Width of the grid lines
 		scaleGridLineWidth : 1,
-
-		//Boolean - Whether to show horizontal lines (except X axis)
-		scaleShowHorizontalLines: true,
-
-		//Boolean - Whether to show vertical lines (except Y axis)
-		scaleShowVerticalLines: true,
 
 		//Boolean - If there is a stroke on each bar
 		barShowStroke : true,
@@ -2133,16 +1987,17 @@
 				this.datasets.push(datasetObject);
 
 				helpers.each(dataset.data,function(dataPoint,index){
-					//Add a new point for each piece of data, passing any required data to draw.
-					datasetObject.bars.push(new this.BarClass({
-						value : dataPoint,
-						label : data.labels[index],
-						datasetLabel: dataset.label,
-						strokeColor : dataset.strokeColor,
-						fillColor : dataset.fillColor,
-						highlightFill : dataset.highlightFill || dataset.fillColor,
-						highlightStroke : dataset.highlightStroke || dataset.strokeColor
-					}));
+					if (helpers.isNumber(dataPoint)){
+						//Add a new point for each piece of data, passing any required data to draw.
+						datasetObject.bars.push(new this.BarClass({
+							value : dataPoint,
+							label : data.labels[index],
+							strokeColor : dataset.strokeColor,
+							fillColor : dataset.fillColor,
+							highlightFill : dataset.highlightFill || dataset.fillColor,
+							highlightStroke : dataset.highlightStroke || dataset.strokeColor
+						}));
+					}
 				},this);
 
 			},this);
@@ -2235,8 +2090,6 @@
 				font : helpers.fontString(this.options.scaleFontSize, this.options.scaleFontStyle, this.options.scaleFontFamily),
 				lineWidth : this.options.scaleLineWidth,
 				lineColor : this.options.scaleLineColor,
-				showHorizontalLines : this.options.scaleShowHorizontalLines,
-				showVerticalLines : this.options.scaleShowVerticalLines,
 				gridLineWidth : (this.options.scaleShowGridLines) ? this.options.scaleGridLineWidth : 0,
 				gridLineColor : (this.options.scaleShowGridLines) ? this.options.scaleGridLineColor : "rgba(0,0,0,0)",
 				padding : (this.options.showScale) ? 0 : (this.options.barShowStroke) ? this.options.barStrokeWidth : 0,
@@ -2259,17 +2112,19 @@
 		addData : function(valuesArray,label){
 			//Map the values array for each of the datasets
 			helpers.each(valuesArray,function(value,datasetIndex){
-				//Add a new point for each piece of data, passing any required data to draw.
-				this.datasets[datasetIndex].bars.push(new this.BarClass({
-					value : value,
-					label : label,
-					x: this.scale.calculateBarX(this.datasets.length, datasetIndex, this.scale.valuesCount+1),
-					y: this.scale.endPoint,
-					width : this.scale.calculateBarWidth(this.datasets.length),
-					base : this.scale.endPoint,
-					strokeColor : this.datasets[datasetIndex].strokeColor,
-					fillColor : this.datasets[datasetIndex].fillColor
-				}));
+					if (helpers.isNumber(value)){
+						//Add a new point for each piece of data, passing any required data to draw.
+						this.datasets[datasetIndex].bars.push(new this.BarClass({
+							value : value,
+							label : label,
+							x: this.scale.calculateBarX(this.datasets.length, datasetIndex, this.scale.valuesCount+1),
+							y: this.scale.endPoint,
+							width : this.scale.calculateBarWidth(this.datasets.length),
+							base : this.scale.endPoint,
+							strokeColor : this.datasets[datasetIndex].strokeColor,
+							fillColor : this.datasets[datasetIndex].fillColor
+						}));
+					}
 			},this);
 
 			this.scale.addXLabel(label);
@@ -2306,15 +2161,13 @@
 			//Draw all the bars for each dataset
 			helpers.each(this.datasets,function(dataset,datasetIndex){
 				helpers.each(dataset.bars,function(bar,index){
-					if (bar.hasValue()){
-						bar.base = this.scale.endPoint;
-						//Transition then draw
-						bar.transition({
-							x : this.scale.calculateBarX(this.datasets.length, datasetIndex, index),
-							y : this.scale.calculateY(bar.value),
-							width : this.scale.calculateBarWidth(this.datasets.length)
-						}, easingDecimal).draw();
-					}
+					bar.base = this.scale.endPoint;
+					//Transition then draw
+					bar.transition({
+						x : this.scale.calculateBarX(this.datasets.length, datasetIndex, index),
+						y : this.scale.calculateY(bar.value),
+						width : this.scale.calculateBarWidth(this.datasets.length)
+					}, easingDecimal).draw();
 				},this);
 
 			},this);
@@ -2323,7 +2176,6 @@
 
 
 }).call(this);
-
 (function(){
 	"use strict";
 
@@ -2435,12 +2287,12 @@
 			}
 		},
 		calculateCircumference : function(value){
-			return (Math.PI*2)*(Math.abs(value) / this.total);
+			return (Math.PI*2)*(value / this.total);
 		},
 		calculateTotal : function(data){
 			this.total = 0;
 			helpers.each(data,function(segment){
-				this.total += Math.abs(segment.value);
+				this.total += segment.value;
 			},this);
 		},
 		update : function(){
@@ -2526,12 +2378,6 @@
 		//Number - Width of the grid lines
 		scaleGridLineWidth : 1,
 
-		//Boolean - Whether to show horizontal lines (except X axis)
-		scaleShowHorizontalLines: true,
-
-		//Boolean - Whether to show vertical lines (except Y axis)
-		scaleShowVerticalLines: true,
-
 		//Boolean - Whether the line is curved between points
 		bezierCurve : true,
 
@@ -2573,7 +2419,6 @@
 			this.PointClass = Chart.Point.extend({
 				strokeWidth : this.options.pointDotStrokeWidth,
 				radius : this.options.pointDotRadius,
-				display: this.options.pointDot,
 				hitDetectionRadius : this.options.pointHitDetectionRadius,
 				ctx : this.chart.ctx,
 				inRange : function(mouseX){
@@ -2614,16 +2459,20 @@
 
 
 				helpers.each(dataset.data,function(dataPoint,index){
+					//Best way to do this? or in draw sequence...?
+					if (helpers.isNumber(dataPoint)){
 					//Add a new point for each piece of data, passing any required data to draw.
-					datasetObject.points.push(new this.PointClass({
-						value : dataPoint,
-						label : data.labels[index],
-						datasetLabel: dataset.label,
-						strokeColor : dataset.pointStrokeColor,
-						fillColor : dataset.pointColor,
-						highlightFill : dataset.pointHighlightFill || dataset.pointColor,
-						highlightStroke : dataset.pointHighlightStroke || dataset.pointStrokeColor
-					}));
+						datasetObject.points.push(new this.PointClass({
+							value : dataPoint,
+							label : data.labels[index],
+							// x: this.scale.calculateX(index),
+							// y: this.scale.endPoint,
+							strokeColor : dataset.pointStrokeColor,
+							fillColor : dataset.pointColor,
+							highlightFill : dataset.pointHighlightFill || dataset.pointColor,
+							highlightStroke : dataset.pointHighlightStroke || dataset.pointStrokeColor
+						}));
+					}
 				},this);
 
 				this.buildScale(data.labels);
@@ -2706,8 +2555,6 @@
 				font : helpers.fontString(this.options.scaleFontSize, this.options.scaleFontStyle, this.options.scaleFontFamily),
 				lineWidth : this.options.scaleLineWidth,
 				lineColor : this.options.scaleLineColor,
-				showHorizontalLines : this.options.scaleShowHorizontalLines,
-				showVerticalLines : this.options.scaleShowVerticalLines,
 				gridLineWidth : (this.options.scaleShowGridLines) ? this.options.scaleGridLineWidth : 0,
 				gridLineColor : (this.options.scaleShowGridLines) ? this.options.scaleGridLineColor : "rgba(0,0,0,0)",
 				padding: (this.options.showScale) ? 0 : this.options.pointDotRadius + this.options.pointDotStrokeWidth,
@@ -2732,15 +2579,17 @@
 			//Map the values array for each of the datasets
 
 			helpers.each(valuesArray,function(value,datasetIndex){
-				//Add a new point for each piece of data, passing any required data to draw.
-				this.datasets[datasetIndex].points.push(new this.PointClass({
-					value : value,
-					label : label,
-					x: this.scale.calculateX(this.scale.valuesCount+1),
-					y: this.scale.endPoint,
-					strokeColor : this.datasets[datasetIndex].pointStrokeColor,
-					fillColor : this.datasets[datasetIndex].pointColor
-				}));
+					if (helpers.isNumber(value)){
+					//Add a new point for each piece of data, passing any required data to draw.
+						this.datasets[datasetIndex].points.push(new this.PointClass({
+							value : value,
+							label : label,
+							x: this.scale.calculateX(this.scale.valuesCount+1),
+							y: this.scale.endPoint,
+							strokeColor : this.datasets[datasetIndex].pointStrokeColor,
+							fillColor : this.datasets[datasetIndex].pointColor
+						}));
+					}
 			},this);
 
 			this.scale.addXLabel(label);
@@ -2768,64 +2617,37 @@
 
 			var ctx = this.chart.ctx;
 
-			// Some helper methods for getting the next/prev points
-			var hasValue = function(item){
-				return item.value !== null;
-			},
-			nextPoint = function(point, collection, index){
-				return helpers.findNextWhere(collection, hasValue, index) || point;
-			},
-			previousPoint = function(point, collection, index){
-				return helpers.findPreviousWhere(collection, hasValue, index) || point;
-			};
-
 			this.scale.draw(easingDecimal);
 
 
 			helpers.each(this.datasets,function(dataset){
-				var pointsWithValues = helpers.where(dataset.points, hasValue);
 
 				//Transition each point first so that the line and point drawing isn't out of sync
 				//We can use this extra loop to calculate the control points of this dataset also in this loop
 
-				helpers.each(dataset.points, function(point, index){
-					if (point.hasValue()){
-						point.transition({
-							y : this.scale.calculateY(point.value),
-							x : this.scale.calculateX(index)
-						}, easingDecimal);
-					}
+				helpers.each(dataset.points,function(point,index){
+					point.transition({
+						y : this.scale.calculateY(point.value),
+						x : this.scale.calculateX(index)
+					}, easingDecimal);
+
 				},this);
 
 
 				// Control points need to be calculated in a seperate loop, because we need to know the current x/y of the point
 				// This would cause issues when there is no animation, because the y of the next point would be 0, so beziers would be skewed
 				if (this.options.bezierCurve){
-					helpers.each(pointsWithValues, function(point, index){
-						var tension = (index > 0 && index < pointsWithValues.length - 1) ? this.options.bezierCurveTension : 0;
-						point.controlPoints = helpers.splineCurve(
-							previousPoint(point, pointsWithValues, index),
-							point,
-							nextPoint(point, pointsWithValues, index),
-							tension
-						);
-
-						// Prevent the bezier going outside of the bounds of the graph
-
-						// Cap puter bezier handles to the upper/lower scale bounds
-						if (point.controlPoints.outer.y > this.scale.endPoint){
-							point.controlPoints.outer.y = this.scale.endPoint;
+					helpers.each(dataset.points,function(point,index){
+						//If we're at the start or end, we don't have a previous/next point
+						//By setting the tension to 0 here, the curve will transition to straight at the end
+						if (index === 0){
+							point.controlPoints = helpers.splineCurve(point,point,dataset.points[index+1],0);
 						}
-						else if (point.controlPoints.outer.y < this.scale.startPoint){
-							point.controlPoints.outer.y = this.scale.startPoint;
+						else if (index >= dataset.points.length-1){
+							point.controlPoints = helpers.splineCurve(dataset.points[index-1],point,point,0);
 						}
-
-						// Cap inner bezier handles to the upper/lower scale bounds
-						if (point.controlPoints.inner.y > this.scale.endPoint){
-							point.controlPoints.inner.y = this.scale.endPoint;
-						}
-						else if (point.controlPoints.inner.y < this.scale.startPoint){
-							point.controlPoints.inner.y = this.scale.startPoint;
+						else{
+							point.controlPoints = helpers.splineCurve(dataset.points[index-1],point,dataset.points[index+1],this.options.bezierCurveTension);
 						}
 					},this);
 				}
@@ -2835,18 +2657,12 @@
 				ctx.lineWidth = this.options.datasetStrokeWidth;
 				ctx.strokeStyle = dataset.strokeColor;
 				ctx.beginPath();
-
-				helpers.each(pointsWithValues, function(point, index){
-					if (index === 0){
-						ctx.moveTo(point.x, point.y);
-					}
-					else{
+				helpers.each(dataset.points,function(point,index){
+					if (index>0){
 						if(this.options.bezierCurve){
-							var previous = previousPoint(point, pointsWithValues, index);
-
 							ctx.bezierCurveTo(
-								previous.controlPoints.outer.x,
-								previous.controlPoints.outer.y,
+								dataset.points[index-1].controlPoints.outer.x,
+								dataset.points[index-1].controlPoints.outer.y,
 								point.controlPoints.inner.x,
 								point.controlPoints.inner.y,
 								point.x,
@@ -2856,15 +2672,19 @@
 						else{
 							ctx.lineTo(point.x,point.y);
 						}
-					}
-				}, this);
 
+					}
+					else{
+						ctx.moveTo(point.x,point.y);
+					}
+				},this);
 				ctx.stroke();
 
-				if (this.options.datasetFill && pointsWithValues.length > 0){
+
+				if (this.options.datasetFill){
 					//Round off the line by going to the base of the chart, back to the start, then fill.
-					ctx.lineTo(pointsWithValues[pointsWithValues.length - 1].x, this.scale.endPoint);
-					ctx.lineTo(pointsWithValues[0].x, this.scale.endPoint);
+					ctx.lineTo(dataset.points[dataset.points.length-1].x, this.scale.endPoint);
+					ctx.lineTo(this.scale.calculateX(0), this.scale.endPoint);
 					ctx.fillStyle = dataset.fillColor;
 					ctx.closePath();
 					ctx.fill();
@@ -2873,16 +2693,16 @@
 				//Now draw the points over the line
 				//A little inefficient double looping, but better than the line
 				//lagging behind the point positions
-				helpers.each(pointsWithValues,function(point){
+				helpers.each(dataset.points,function(point){
 					point.draw();
 				});
+
 			},this);
 		}
 	});
 
 
 }).call(this);
-
 (function(){
 	"use strict";
 
@@ -3080,8 +2900,6 @@
 			helpers.each(this.segments,function(segment){
 				segment.save();
 			});
-			
-			this.reflow();
 			this.render();
 		},
 		reflow : function(){
@@ -3205,7 +3023,6 @@
 			this.PointClass = Chart.Point.extend({
 				strokeWidth : this.options.pointDotStrokeWidth,
 				radius : this.options.pointDotRadius,
-				display: this.options.pointDot,
 				hitDetectionRadius : this.options.pointHitDetectionRadius,
 				ctx : this.chart.ctx
 			});
@@ -3246,22 +3063,24 @@
 				this.datasets.push(datasetObject);
 
 				helpers.each(dataset.data,function(dataPoint,index){
+					//Best way to do this? or in draw sequence...?
+					if (helpers.isNumber(dataPoint)){
 					//Add a new point for each piece of data, passing any required data to draw.
-					var pointPosition;
-					if (!this.scale.animation){
-						pointPosition = this.scale.getPointPosition(index, this.scale.calculateCenterOffset(dataPoint));
+						var pointPosition;
+						if (!this.scale.animation){
+							pointPosition = this.scale.getPointPosition(index, this.scale.calculateCenterOffset(dataPoint));
+						}
+						datasetObject.points.push(new this.PointClass({
+							value : dataPoint,
+							label : data.labels[index],
+							x: (this.options.animation) ? this.scale.xCenter : pointPosition.x,
+							y: (this.options.animation) ? this.scale.yCenter : pointPosition.y,
+							strokeColor : dataset.pointStrokeColor,
+							fillColor : dataset.pointColor,
+							highlightFill : dataset.pointHighlightFill || dataset.pointColor,
+							highlightStroke : dataset.pointHighlightStroke || dataset.pointStrokeColor
+						}));
 					}
-					datasetObject.points.push(new this.PointClass({
-						value : dataPoint,
-						label : data.labels[index],
-						datasetLabel: dataset.label,
-						x: (this.options.animation) ? this.scale.xCenter : pointPosition.x,
-						y: (this.options.animation) ? this.scale.yCenter : pointPosition.y,
-						strokeColor : dataset.pointStrokeColor,
-						fillColor : dataset.pointColor,
-						highlightFill : dataset.pointHighlightFill || dataset.pointColor,
-						highlightStroke : dataset.pointHighlightStroke || dataset.pointStrokeColor
-					}));
 				},this);
 
 			},this);
@@ -3376,15 +3195,17 @@
 			//Map the values array for each of the datasets
 			this.scale.valuesCount++;
 			helpers.each(valuesArray,function(value,datasetIndex){
-				var pointPosition = this.scale.getPointPosition(this.scale.valuesCount, this.scale.calculateCenterOffset(value));
-				this.datasets[datasetIndex].points.push(new this.PointClass({
-					value : value,
-					label : label,
-					x: pointPosition.x,
-					y: pointPosition.y,
-					strokeColor : this.datasets[datasetIndex].pointStrokeColor,
-					fillColor : this.datasets[datasetIndex].pointColor
-				}));
+					if (helpers.isNumber(value)){
+						var pointPosition = this.scale.getPointPosition(this.scale.valuesCount, this.scale.calculateCenterOffset(value));
+						this.datasets[datasetIndex].points.push(new this.PointClass({
+							value : value,
+							label : label,
+							x: pointPosition.x,
+							y: pointPosition.y,
+							strokeColor : this.datasets[datasetIndex].pointStrokeColor,
+							fillColor : this.datasets[datasetIndex].pointColor
+						}));
+					}
 			},this);
 
 			this.scale.labels.push(label);
@@ -3406,7 +3227,6 @@
 			this.eachPoints(function(point){
 				point.save();
 			});
-			this.reflow();
 			this.render();
 		},
 		reflow: function(){
@@ -3431,9 +3251,7 @@
 
 				//Transition each point first so that the line and point drawing isn't out of sync
 				helpers.each(dataset.points,function(point,index){
-					if (point.hasValue()){
-						point.transition(this.scale.getPointPosition(index, this.scale.calculateCenterOffset(point.value)), easeDecimal);
-					}
+					point.transition(this.scale.getPointPosition(index, this.scale.calculateCenterOffset(point.value)), easeDecimal);
 				},this);
 
 
@@ -3460,9 +3278,7 @@
 				//A little inefficient double looping, but better than the line
 				//lagging behind the point positions
 				helpers.each(dataset.points,function(point){
-					if (point.hasValue()){
-						point.draw();
-					}
+					point.draw();
 				});
 
 			},this);

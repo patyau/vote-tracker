@@ -2,6 +2,12 @@
   border: 1px dotted green;
 }*/
 
+section {
+/*	border: 3px solid red;
+*/	padding: 0;
+	margin-left: 0;
+}
+
 figure {
   width: 250px;
 }
@@ -14,4 +20,10 @@ img:hover {
 
 img {
 	border: solid black 5px;
+	margin-left: 0;
+}
+
+figure {
+	margin-left: 0;
+	margin-bottom: 10px;
 }
