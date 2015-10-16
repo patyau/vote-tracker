@@ -63,7 +63,7 @@ var boba = new starWars('Boba Fett', 'img/star-wars/bobba.jpg', 'Bounty Hunter',
 var c3po = new starWars('C3PO', 'img/star-wars/c3po.jpg', 'Protocol Droid', 'I am fluent in over six million forms of communication. Wanna sext?');
 var chewie = new starWars('Chewie', 'img/star-wars/chewie.jpg', 'Bodyguard', 'Uuuuuuuuurrrr. Urrr. Arrrrrrrrr');
 var dooku = new starWars('Count Dooku', 'img/star-wars/dooku.jpg', 'Sith Lord', '', '');
-var ewok = new starWars('Ewok', 'img/star-wars/ewok.jpg', 'Hunter/Gatherer', 'Cute, small and hairy all over. Msg me if you want to cuddle.');
+var ewok = new starWars('Ewok', 'img/star-wars/ewok.jpg', 'Hunter/Gatherer', 'Cute, small and hairy all over. Msg me if you want to.');
 var femaleJedi = new starWars('Female Blue Jedi', 'img/star-wars/female-jedi.jpg', 'Jedi Knight', '');
 var jarjar = new starWars('Jar Jar Binks', 'img/star-wars/jarjar.jpg', 'Senator, Galactic Senate', 'I\'m the worst. THE WORST.');
 var lando = new starWars('Lando Calrissian', 'img/star-wars/lando.jpg', 'Smuggler/General for the Rebel Alliance', 'Questionable morals at times. Looking to take Ms. Right Now on a trip to Cloud City.');
@@ -198,14 +198,14 @@ function makechart()	{
 }
 makechart();
 
-// var largest = 0;
+var largest = 0;
 
-// findLargest = function() {
-// 	for(i = 0; i < starTrekArray.length, i++) {
-// 		if(starTrekArray[i].votes > largest) {
-// 			console.log(largest + '' + starTrekArray[i].votes);
-// 			largest = starTrekArray[i].votes
-// 		}
-// 	}
-// };
-// findLargest();
+findLargest = function() {
+	for(i = 0; i < starTrekArray.length, i++) {
+		if(starTrekArray[i].votes > largest) {
+			console.log(largest + '' + starTrekArray[i].votes);
+			largest = starTrekArray[i].votes
+		}
+	}
+};
+findLargest();
