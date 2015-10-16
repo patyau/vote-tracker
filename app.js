@@ -24,12 +24,12 @@ var data = new starTrek('Data', 'img/star-trek/data.jpg', 'Operations Officer, E
 var dax = new starTrek('Jadzia Dax', 'img/star-trek/dax.jpg', 'Science Officer, Deep Space Nine', 'Eighth host of the Dax symbiont. I have the spirit of an old man. Literally. Outgoing and open minded. my hobbies include music, tongo, gymnastics and Klingon blood oaths.');
 var geordi = new starTrek('Geordi LaForge', 'img/star-trek/geordi.jpg', 'Chief Engineer, Enterprise', 'I\'m not a chemist and I might be blind... but I\'d like to see if we have some chemistry.');
 var guinan = new starTrek('Guinan', 'img/star-trek/guinan.jpg', 'Bartender, Enterprise', 'Been there and back and seen it all. I\'m just a bartender, but I might be the smartest person on this ship.');
-var harry = new starTrek('Harry Kim', 'img/star-trek/harry.jpg', 'Operations Officer, Voyager', 'I like to live an active lifestyle. Looking for someone that can hold serve with me on the tennis court.');
+var harry = new starTrek('Harry Kim', 'img/star-trek/harry.jpg', 'Operations Officer, Voyager', 'I want our love to be like pi, irrational and never ending.');
 var janeway = new starTrek('Captain Janeway', 'img/star-trek/janeway.jpg', 'Captain, Voyager', 'Coffee fanatic. First federation captain to successfully traverse the Delta Quadrant.');
 var mccoy = new starTrek('Dr. McCoy', 'img/star-trek/mccoy.jpg', 'Chief Medical Officer, Enterprise', 'I\'m a doctor. Not an engineer. Or a mechanic. Or an elevator. I can get a little ornery sometimes. My nickname is Bones. Want to find out why?');
-var obrien = new starTrek('Miles O\'Brien', 'img/star-trek/obrien.jpg', 'Transporter Chief, Enterprise', 'Hobbies include playing the cello, kayaking, raquetball, darts and historical battle reenactments.');
+var obrien = new starTrek('Miles O\'Brien', 'img/star-trek/obrien.jpg', 'Transporter Chief, Enterprise', 'Want to meet up and make the next generation?');
 var odo = new starTrek('Odo', 'img/star-trek/odo.jpg', 'Chief Security Officer, Deep Space Nine', 'Stickler for the rules. Deep sense of justice. A little hesitant about coupling, but willing to give it a try for the right solid humanoid.');
-var quark = new starTrek('Quark','img/star-trek/quark.jpg', 'Bar Owner', 'I love money and women.');
+var quark = new starTrek('Quark','img/star-trek/quark.jpg', 'Bar Owner', 'I love money and women!');
 var riker = new starTrek('William Riker', 'img/star-trek/riker.jpg', 'First Officer, Enterprise', 'Ladies man with a spectacular beard. Come to my quarters and maybe I\'ll show you, I mean play you, my trombone.');
 var scotty = new starTrek('Scotty', 'img/star-trek/scotty.jpg', 'Chief Engineer, Enterprise', 'Large with lots of loving to go around. You can count on me to give you all I\'ve got.');
 var seven = new starTrek('Seven of Nine', 'img/star-trek/seven.jpg', 'Crew Member, Voyager', 'Interested in exploring the benefits of human sexuality. Perhaps we can copulate if we are sufficiently compatible.');
@@ -57,7 +57,7 @@ var luke = new starWars('Luke Skywalker', 'img/star-wars/luke-skywalker.jpg', 'J
 var yoda = new starWars('Yoda', 'img/star-wars/yoda.jpg', 'Jedi Master', 'One of the most powerful Jedi in the history of Jedi. Swamps and cramped living spaces the ideal date must have.');
 var solo = new starWars('Han Solo', 'img/star-wars/han-solo.jpg', 'Smuggler/General for the Rebel Alliance', 'Dashing hero looking for a copilot. Tonight this Han doesn\'t want to fly solo');
 var ackbar = new starWars('Admiral Ackbar', 'img/star-wars/ackbar.jpg', 'Admiral, Rebel Alliance', 'IT\'S A TRAP!!');
-var anakin = new starWars('Anakin Skywalker', 'img/star-wars/anakin.jpg', 'Jedi Knight', 'I will do ANYTHING for love. And if you don\'t like it I\'ll become a dark Sith lord and kill you.');
+var anakin = new starWars('Anakin Skywalker', 'img/star-wars/anakin.jpg', 'Jedi Knight', 'I will do ANYTHING for love. Including becoming a dark Sith lord and killing you when you\'re pregnant.');
 var bail = new starWars('Bail Organa', 'img/star-wars/bail.jpg', 'Senator, Alderaan Sector', 'Stylish and handsome. Strong belief in justice. Dislikes evil empires.');
 var boba = new starWars('Boba Fett', 'img/star-wars/bobba.jpg', 'Bounty Hunter', 'The only thing I want more than a date with you is Han Solo.');
 var c3po = new starWars('C3PO', 'img/star-wars/c3po.jpg', 'Protocol Droid', 'I am fluent in over six million forms of communication. Wanna sext?');
@@ -81,17 +81,12 @@ var shmi = new starWars('Shmi Skywalker', 'img/star-wars/shmi.jpg', 'Slave', '')
 var wedge = new starWars('Wedge Antilles', 'img/star-wars/wedge.jpg', 'Pilot, Rebel Alliance', '');
 var zam = new starWars('Zam the Assassin', 'img/star-wars/zam.jpg', 'Assassin', '');
 
-
-/* Debugging Message */
-// console.dir(starTrekArray);
-// console.dir(starWarsArray);
-
 var choice1 = document.getElementById('choice1');
 var choice2 = document.getElementById('choice2');
 var trekName = document.getElementById('trekName');
 var warsName = document.getElementById('warsName');
-var trekProfile = document.getElementById('trekProfile')
-var warsProfile = document.getElementById('warsProfile')
+var trekProfile = document.getElementById('trekProfile');
+var warsProfile = document.getElementById('warsProfile');
 var rand1, rand2;
 
 var tracker = {
@@ -99,11 +94,11 @@ var tracker = {
 
 tracker.starTrekRandPic = function() {
 return Math.floor(Math.random() * starTrekArray.length);
-}
+};
 
 tracker.starWarsRandPic = function() {
 return Math.floor(Math.random() * starWarsArray.length);
-}
+};
 
 tracker.displayImages = function(e) {
 	if (starTrekArray.length === 0) {
@@ -131,7 +126,6 @@ tracker.displayImages = function(e) {
 };
 
 
-
 /* code to load pics on initial page load */
 window.onload = function(e) {
 	tracker.displayImages(e);
@@ -139,11 +133,6 @@ window.onload = function(e) {
 
 /* function to store local data */
 function storeData() {
-	// var starTrekData = JSON.stringify(starTrekTotalVotes);
-	// var starWarsData = JSON.stringify(starWarsTotalVotes);
-	// localStorage.setItem('Star Trek votes', starTrekData);
-	// localStorage.setItem('Star Wars votes', starWarsData);
-
 	localStorage.setItem('Star Trek votes', JSON.stringify(starTrekTotalVotes));
 	localStorage.setItem('Star Wars votes', JSON.stringify(starWarsTotalVotes));
 }
@@ -162,22 +151,6 @@ retrieveData();
 choice1.addEventListener('click', function() {
 	starTrekArray[rand1].votes += 1;
 	starTrekTotalVotes += 1;
-	// console.log('User voted for: ' + starTrekArray[rand1].character);
-	// console.log(starTrekArray[rand1].character + ' total votes = ' + starTrekArray[rand1].votes)
-	// console.log('starTrekTotalVotes: ' + starTrekTotalVotes)
-
-	// for(var i in data) {
-	// 	if (data[i].label === choice1.innerHTML) {
-	// 		data[i].value += 1;
-	// 	}
-	// }
-
-	// for (var i in makechart.segments) {
-	// 	if (makechart.segments[i].label === 'Star Trek') {
-	// 		makechart.segments[i].value += 1;
-	// 	}
-	// }
-
 	tracker.displayImages(event);
 	makechart();
 	storeData();
@@ -186,22 +159,6 @@ choice1.addEventListener('click', function() {
 choice2.addEventListener('click', function() {
 	starWarsArray[rand2].votes += 1;
 	starWarsTotalVotes += 1;
-	// console.log('User voted for: ' + starWarsArray[rand2].character);
-	// console.log(starWarsArray[rand2].character + ' total votes = ' + starWarsArray[rand2].votes)
-	// console.log('starWarsTotalVotes: ' + starWarsTotalVotes)
-	
-	// for(var i in data) {
-	// 	if (data[i].label === choice2.innerHTML) {
-	// 		data[i].value += 1;
-	// 	}
-	// }
-
-	// for (var i in makechart.segments) {
-	// 	if (makechart.segments[i].label === 'Star Wars') {
-	// 		makechart.segments[i].value += 1;
-	// 	}
-	// }
-
 	tracker.displayImages(event);
 	makechart();
 	storeData();
