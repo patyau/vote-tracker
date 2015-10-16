@@ -1,6 +1,6 @@
 /* Star Trek vs Star Wars */
-var starTrekTotalVotes = 0;
-var starWarsTotalVotes = 0;
+var starTrekTotalVotes;
+var starWarsTotalVotes;
 
 /* Star Trek Array, Constructor and Objects */
 var starTrekArray = [];
@@ -87,10 +87,11 @@ var trekName = document.getElementById('trekName');
 var warsName = document.getElementById('warsName');
 var trekProfile = document.getElementById('trekProfile');
 var warsProfile = document.getElementById('warsProfile');
-var rand1, rand2;
+var rand1
 
-var tracker = {
-};
+
+
+var tracker = {};
 
 tracker.starTrekRandPic = function() {
 return Math.floor(Math.random() * starTrekArray.length);
@@ -106,7 +107,7 @@ tracker.displayImages = function(e) {
 		return null;
 	}
 	else {
-		e.preventDefault();
+		// e.preventDefault();
 
 		/* Call randPic functions to grab two random photo numbers */
 		rand1 = tracker.starTrekRandPic();
@@ -126,10 +127,37 @@ tracker.displayImages = function(e) {
 };
 
 
-/* code to load pics on initial page load */
-window.onload = function(e) {
-	tracker.displayImages(e);
-};
+
+tracker.voteTrackerTrek = function() {
+	starTrekArray[rand1].votes += 1;
+	starTrekTotalVotes += 1;
+	tracker.displayImages();
+	skillsChart.datasets[0].bars[0].value += 1;
+	storeData();
+	retrieveData();
+	makechart();
+}
+
+tracker.voteTrackerWars = function() {
+	starWarsArray[rand2].votes += 1;
+	starWarsTotalVotes += 1;
+	tracker.displayImages();
+	skillsChart.datasets[0].bars[1].value += 1;
+	storeData();
+	retrieveData();
+	makechart();
+}
+
+choice1.addEventListener('click', tracker.voteTrackerTrek);
+choice2.addEventListener('click', tracker.voteTrackerWars);
+
+tracker.displayImages();
+
+
+// /* code to load pics on initial page load */
+// window.onload = function(e) {
+// 	tracker.displayImages(e);
+// };
 
 /* function to store local data */
 function storeData() {
@@ -146,66 +174,83 @@ function retrieveData() {
 	starTrekTotalVotes = retrievedStarTrekVotes;
 	starWarsTotalVotes = retrievedStarWarsVotes;
 }
-retrieveData();
 
-choice1.addEventListener('click', function() {
-	starTrekArray[rand1].votes += 1;
-	starTrekTotalVotes += 1;
-	tracker.displayImages(event);
-	makechart();
-	storeData();
-});
+var skillsChart;
 
-choice2.addEventListener('click', function() {
-	starWarsArray[rand2].votes += 1;
-	starWarsTotalVotes += 1;
-	tracker.displayImages(event);
-	makechart();
-	storeData();
-});
-
-function makechart()	{
-	var data = [
-	  {
-	    value: starTrekTotalVotes,
-	    label: 'Star Trek',
-	    color: '#811BD6',
-	    highlight: '#811B33',
-	    labelcolor: 'white',
-	    labelfontsize: '16'
-	  },
-	  {
-	    value: starWarsTotalVotes,
-	    label: 'Star Wars',
-	    color: '#9CBABA',
-	    highlight: '#9CBA99',
-	    labelcolor: 'white',
-	    labelfontsize: '16'
-	  }
-	];
-
-	var context = document.getElementById('results').getContext('2d');
-	var skillsChart = new Chart(context).Pie(data, {
-	    //Number - Amount of animation steps
-	    animationSteps : 10,
-	    //String - Animation easing effect
-	    animationEasing : "easeOutBounce",
-	    //Boolean - Whether we animate the rotation of the Doughnut
-	    animateRotate : true,
-	    //Boolean - Whether we animate scaling the Doughnut from the centre
-	    animateScale : true
-	});
-}
-makechart();
-
-var largest = 0;
-
-findLargest = function() {
-	for(i = 0; i < starTrekArray.length, i++) {
-		if(starTrekArray[i].votes > largest) {
-			console.log(largest + '' + starTrekArray[i].votes);
-			largest = starTrekArray[i].votes
-		}
+function makechart() {
+	var data = {
+		labels: ['Star Trek', 'Star Wars'],
+		datasets: [
+			{
+			label: 'Total Votes',
+			fillColor: '#811bd6',
+			strokeColor: '#811b33',
+		    highlightFill: "#FFAAAA",
+		    highlightStroke: "#000000",			
+		    data: [starTrekTotalVotes, starWarsTotalVotes]
+			}
+		]
 	}
-};
-findLargest();
+	var barChart = document.getElementById('results').getContext('2d');
+	skillsChart = new Chart(barChart).Bar(data);
+}
+
+if (localStorage.getItem('Star Trek votes') && localStorage.getItem('Star Wars votes')) {
+	tracker.displayImages();
+	retrieveData();
+	makechart();
+} else {
+	starTrekTotalVotes = 0;
+	starWarsTotalVotes = 0;
+	storeData();
+	makechart();
+}
+
+
+// function makechart()	{
+// 	var data = [
+// 	  {
+// 	    value: starTrekTotalVotes,
+// 	    label: 'Star Trek',
+// 	    color: '#811BD6',
+// 	    highlight: '#811B33',
+// 	    labelcolor: 'white',
+// 	    labelfontsize: '16'
+// 	  },
+// 	  {
+// 	    value: starWarsTotalVotes,
+// 	    label: 'Star Wars',
+// 	    color: '#9CBABA',
+// 	    highlight: '#9CBA99',
+// 	    labelcolor: 'white',
+// 	    labelfontsize: '16'
+// 	  }
+// 	];
+
+// 	var context = document.getElementById('results').getContext('2d');
+// 	var skillsChart = new Chart(context).Pie(data, {
+// 	    //Number - Amount of animation steps
+// 	    animationSteps : 10,
+// 	    //String - Animation easing effect
+// 	    animationEasing : "easeOutBounce",
+// 	    //Boolean - Whether we animate the rotation of the Doughnut
+// 	    animateRotate : true,
+// 	    //Boolean - Whether we animate scaling the Doughnut from the centre
+// 	    animateScale : true
+// 	});
+// }
+
+// makechart();
+
+
+// var largest = 0;
+
+// findLargest = function() {
+// 	for(i = 0; i < starTrekArray.length, i++) {
+// 		if(starTrekArray[i].votes > largest) {
+// 			console.log(largest + '' + starTrekArray[i].votes);
+// 			largest = starTrekArray[i].votes
+// 		}
+// 	}
+// };
+// findLargest();
