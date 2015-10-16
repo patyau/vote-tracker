@@ -16,7 +16,7 @@ body {
 }
 
 section {
-	/*border: 3px solid red;*/
+	/*border: 3px dashed red;*/
 	padding: 0;
 	margin-left: 0px;
 }
@@ -28,7 +28,7 @@ img.choices:hover {
 }
 
 img.choices {
-  height: 300px;
+  width: 195px;
 }
 
 img {
@@ -49,7 +49,7 @@ figure {
 	margin-top: 150px;
 	text-align: center;
 	/*padding-left: 25px;*/
-	font-style: oblique;
+	/*font-style: oblique;*/
 	font-weight: bolder;
 	line-height: 10%;
 }
