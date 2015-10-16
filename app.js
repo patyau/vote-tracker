@@ -63,7 +63,7 @@ var boba = new starWars('Boba Fett', 'img/star-wars/bobba.jpg', 'Bounty Hunter',
 var c3po = new starWars('C3PO', 'img/star-wars/c3po.jpg', 'Protocol Droid', 'I am fluent in over six million forms of communication. Wanna sext?');
 var chewie = new starWars('Chewie', 'img/star-wars/chewie.jpg', 'Bodyguard', 'Uuuuuuuuurrrr. Urrr. Arrrrrrrrr');
 var dooku = new starWars('Count Dooku', 'img/star-wars/dooku.jpg', 'Sith Lord', '', '');
-var ewok = new starWars('Ewok', 'img/star-wars/ewok.jpg', 'Hunter/Gatherer', 'Cute, small and hairy all over. Msg me if this sounds like a match.');
+var ewok = new starWars('Ewok', 'img/star-wars/ewok.jpg', 'Hunter/Gatherer', 'Cute, small and hairy all over. Msg me if you want to cuddle.');
 var femaleJedi = new starWars('Female Blue Jedi', 'img/star-wars/female-jedi.jpg', 'Jedi Knight', '');
 var jarjar = new starWars('Jar Jar Binks', 'img/star-wars/jarjar.jpg', 'Senator, Galactic Senate', 'I\'m the worst. THE WORST.');
 var lando = new starWars('Lando Calrissian', 'img/star-wars/lando.jpg', 'Smuggler/General for the Rebel Alliance', 'Questionable morals at times. Looking to take Ms. Right Now on a trip to Cloud City.');
@@ -114,8 +114,8 @@ tracker.displayImages = function(e) {
 
 		/*	grab two img placeholder elements by html attrib id's
 			assign src (from array position) to the img tags using img.src */
-		choice1.innerHTML = '<img alt ="' + starTrekArray[rand1].character + '" title="' + starTrekArray[rand1].character + '" src ="' + starTrekArray[rand1].path + '">';
-		choice2.innerHTML = '<img alt ="' + starWarsArray[rand2].character + '" title="' + starWarsArray[rand2].character + '" src ="' + starWarsArray[rand2].path + '">';
+		choice1.innerHTML = '<img class="choices" alt ="' + starTrekArray[rand1].character + '" title="' + starTrekArray[rand1].character + '" src ="' + starTrekArray[rand1].path + '">';
+		choice2.innerHTML = '<img class="choices" alt ="' + starWarsArray[rand2].character + '" title="' + starWarsArray[rand2].character + '" src ="' + starWarsArray[rand2].path + '">';
 
 		trekName.innerHTML = starTrekArray[rand1].character;
 		warsName.innerHTML = starWarsArray[rand2].character;		
@@ -187,11 +187,11 @@ function makechart()	{
 	var context = document.getElementById('results').getContext('2d');
 	var skillsChart = new Chart(context).Pie(data, {
 	    //Number - Amount of animation steps
-	    animationSteps : 20,
+	    animationSteps : 10,
 	    //String - Animation easing effect
 	    animationEasing : "easeOutBounce",
 	    //Boolean - Whether we animate the rotation of the Doughnut
-	    animateRotate : false,
+	    animateRotate : true,
 	    //Boolean - Whether we animate scaling the Doughnut from the centre
 	    animateScale : true
 	});

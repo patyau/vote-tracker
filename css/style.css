@@ -16,15 +16,19 @@ body {
 }
 
 section {
-/*	border: 3px solid red;
-*/	padding: 0;
+	/*border: 3px solid red;*/
+	padding: 0;
 	margin-left: 0px;
 }
 
-img:hover {
+img.choices:hover {
   background-color: #B4EEB4;
   opacity: .75;
   cursor: pointer;
+}
+
+img.choices {
+  height: 300px;
 }
 
 img {
@@ -43,20 +47,28 @@ figure {
 */
 #content2 {
 	margin-top: 150px;
-/*	text-align: center;
-*/	padding-left: 25px;
+	text-align: center;
+	/*padding-left: 25px;*/
+	font-style: oblique;
+	font-weight: bolder;
+	line-height: 10%;
 }
-
-/*#chart {
-	padding-left: 30px;
-}*/
 
 #chart {
-	margin-left: 25px;
+	padding-left: 30px;
+	/*margin-bottom: 500px;*/
+	text-align: center;
 }
+/*
+section #chart {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}*/
 
-.title {
-	margin-left: 50px;
+h4.title {
+	margin-left: auto;
+	margin-right: auto;
 }
 
 header img {
@@ -73,8 +85,8 @@ p#slogan {
 hr {
 	border: 0;
 	color: orange;
-	background-color: gray;
-	height: 5px;
+	background-color: #cccccc;
+	height: 3px;
 	width: 100%;
 	text-align: left;
 	margin-top: -5px;
@@ -85,14 +97,43 @@ header {
 }
 
 footer {
-	text-align: right;
+	background-color: #cccccc;
+	padding-right: 40px;
+	height: 100px;
+	/*width: 100%;*/
+	padding-top: 3px;
+	margin-top: 50px;
 }
 
 footer p {
 	margin-top: 50px;
-	color: gray;
+	/*color: white;*/
+	position: absolute;
+	/*bottom: 0;*/
+	right: 40px;
+	text-align: right;
+	vertical-align: bottom;
 }
 
 section h4 {
 	margin-bottom: 5px;
 }
+
+aside {
+	text-align: right;
+	float: right;
+}
+
+canvas {
+	padding-top: 20px;
+}
+
+#trekName, #warsName {
+	color: #ff3366;
+	font-weight: bold;
+}
+
+/*#versus {
+	font-style: oblique;
+	font-weight: bold;
+}*/
