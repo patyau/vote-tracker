@@ -11,6 +11,10 @@
 	background: rgba(7, 7, 7, .7);
 }
 */
+body {
+	font-family: Helvetica, Sans Serif;
+}
+
 section {
 /*	border: 3px solid red;
 */	padding: 0;
@@ -48,14 +52,47 @@ figure {
 }*/
 
 #chart {
-	margin-left: 30px;
-}
-
-section h2 {
 	margin-left: 25px;
 }
 
-header h2 {
-	margin-top: 30px;
+.title {
+	margin-left: 50px;
+}
+
+header img {
+	border: none;
+}
+
+p#slogan {
+	font-family: Helvetica, Sans Serif;
+	font-size: 1.25em;
+	margin-top: -10px;
 	margin-bottom: 10px;
+}
+
+hr {
+	border: 0;
+	color: orange;
+	background-color: gray;
+	height: 5px;
+	width: 100%;
+	text-align: left;
+	margin-top: -5px;
+}
+
+header {
+	margin-bottom: -10px;
+}
+
+footer {
+	text-align: right;
+}
+
+footer p {
+	margin-top: 50px;
+	color: gray;
+}
+
+section h4 {
+	margin-bottom: 5px;
 }

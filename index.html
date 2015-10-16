@@ -10,20 +10,25 @@
 	<script src="chart.js"></script>
 </head>
 <body>
+	<div id="wrapper">
 	<header class="container">
-		<h2>Hot or Not? Star Trek vs Star Wars Edition</h2>
-		<p id="slogan">Which intergalactic hotties do you want to Netflix and chill with??</p>
+		<img src="img/header.png">
 	</header>
-	<main class="container"> <!--Main = flex box -->
-			<nav>
-			</nav>
+	</div>
+	<hr>
 
+
+
+	<main class="container"> <!--Main = flex box -->
+		<p id="slogan">
+			Which intergalactic hotties do you want to Netflix and chill with??</p>
+		
 		<section id="content1" class="four columns">
 			<figure id="choice1" type="click">
 			</figure>
-			<h3 id="trekName">
-				Star Trek Name<br />
-			</h3>
+			<h4 id="trekName">
+			</h4>
+			<p id="trekProfile">
 		</section>
 
 		<section id="content2" class="two columns">
@@ -32,12 +37,13 @@
 
 		<section id="content3" class="four columns">
 			<figure id="choice2" type="click"></figure>
-			<h3 id="warsName">
-			</h3>
+			<h4 id="warsName">
+			</h4>
+			<p id="warsProfile">
 		</section>
 
 		<section id="chart" class="three columns">
-			<h2>Results</h2>
+			<h4 class="title">Results</h4>
 			<canvas id="results" width="200" height="200">
 			</canvas>
 
@@ -59,9 +65,9 @@
 	
 	</main>
 	<footer class="container">
-<!-- 		<p>
+		<p>
 			Pat Yau<br />
-			&copy; 2015</p> -->
+			&copy; 2015</p>
 	</footer>
 <script src="app.js"></script>
 </body>
