@@ -28,7 +28,7 @@ img.choices:hover {
 }
 
 img.choices {
-  width: 195px;
+ 	width: 180px;
 }
 
 img {
@@ -115,7 +115,7 @@ footer p {
 	vertical-align: bottom;
 }
 
-section h4 {
+section p {
 	margin-bottom: 5px;
 }
 
@@ -131,6 +131,7 @@ canvas {
 #trekName, #warsName {
 	color: #ff3366;
 	font-weight: bold;
+	font-size: 1.5em;
 }
 
 /*#versus {
